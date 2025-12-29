@@ -27,4 +27,28 @@ final class ResultViewModel: ObservableObject {
             selectedAllergens: userAllergens
         )
     }
+    
+    func calculateRiskFromOCR(
+        ingredientsText: String,
+        userAllergens: [Allergen]
+    ) {
+        let lowercasedText = ingredientsText.lowercased()
+
+        var detectedNames: [String] = []
+
+        for allergen in userAllergens {
+            for keyword in allergen.keywords {
+                if lowercasedText.contains(keyword.lowercased()) {
+                    detectedNames.append(allergen.name)
+                    break
+                }
+            }
+        }
+
+        if detectedNames.isEmpty {
+            riskLevel = .safe
+        } else {
+            riskLevel = .danger
+        }
+    }
 }

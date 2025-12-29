@@ -16,7 +16,7 @@ enum RiskLevel {
     var title : String {
         switch self {
         case .safe:
-            return "Güçlü"
+            return "Güvenli"
         case .warning:
             return "Dikkat"
         case .danger:
