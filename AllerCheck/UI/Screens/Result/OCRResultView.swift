@@ -10,7 +10,8 @@ import SwiftUI
 struct OCRResultView: View {
 
     let ocrText: String
-
+    
+    @State private var extractedIngredients: String?
     @EnvironmentObject private var userSettings: UserSettings
     @StateObject private var viewModel = ResultViewModel()
     @Environment(\.dismiss) private var dismiss
@@ -34,11 +35,19 @@ struct OCRResultView: View {
                 .multilineTextAlignment(.center)
                 .padding()
 
-            ScrollView {
-                Text(ocrText)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding()
+            if let ingredients = extractedIngredients {
+                VStack(alignment: .leading, spacing: 8) {
+
+                    Text("İçindekiler")
+                        .font(.headline)
+
+                    Text(ingredients)
+                        .font(.body)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                }
             }
 
             Spacer()
@@ -56,8 +65,21 @@ struct OCRResultView: View {
         }
         .padding()
         .onAppear {
+            guard let ingredients =
+                OCRTextParser.extractIngredients(from: ocrText) else {
+
+                viewModel.riskLevel = .warning
+                extractedIngredients = nil
+                print("⚠️ İçindekiler bulunamadı")
+                return
+            }
+
+            extractedIngredients = ingredients
+
+            print("🧾 EKRANDA GÖSTERİLEN İÇİNDEKİLER: \(ingredients)")
+
             viewModel.calculateRiskFromOCR(
-                ingredientsText: ocrText,
+                ingredientsText: ingredients,
                 userAllergens: userSettings.selectedAllergens
             )
         }
