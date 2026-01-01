@@ -26,7 +26,7 @@ final class UserSettings: ObservableObject {
     private func saveAllergens() {
         let names = selectedAllergens.map { $0.name }
         UserDefaults.standard.set(names, forKey: key)
-        UserDefaults.standard.synchronize()
+        // synchronize() artık gerekli değil - otomatik senkronize ediliyor
     }
 
     private func loadAllergens() {

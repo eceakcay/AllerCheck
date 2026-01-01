@@ -24,12 +24,46 @@ final class OCRScanViewModel: ObservableObject {
         recognizedText = ""
         errorMessage = nil
 
-        // 1️⃣ Görsel kontrolü
+        // 1️⃣ Görsel kontrolü ve boyut optimizasyonu
         guard let cgImage = image.cgImage else {
             isProcessing = false
             errorMessage = "Görsel CGImage'a dönüştürülemedi."
             print("❌ CGImage alınamadı")
             return
+        }
+        
+        // Görüntü çok büyükse optimize et (OCR için 2000px yeterli)
+        let maxDimension: CGFloat = 2000
+        let optimizedImage: CGImage
+        
+        if cgImage.width > Int(maxDimension) || cgImage.height > Int(maxDimension) {
+            let scale = min(maxDimension / CGFloat(cgImage.width), maxDimension / CGFloat(cgImage.height))
+            let newSize = CGSize(width: CGFloat(cgImage.width) * scale, height: CGFloat(cgImage.height) * scale)
+            
+            if let colorSpace = cgImage.colorSpace,
+               let context = CGContext(
+                data: nil,
+                width: Int(newSize.width),
+                height: Int(newSize.height),
+                bitsPerComponent: cgImage.bitsPerComponent,
+                bytesPerRow: 0,
+                space: colorSpace,
+                bitmapInfo: cgImage.bitmapInfo.rawValue
+               ) {
+                context.interpolationQuality = .high
+                context.draw(cgImage, in: CGRect(origin: .zero, size: newSize))
+                
+                if let resizedImage = context.makeImage() {
+                    optimizedImage = resizedImage
+                } else {
+                    optimizedImage = cgImage
+                }
+            } else {
+                // Optimize edilemezse orijinali kullan
+                optimizedImage = cgImage
+            }
+        } else {
+            optimizedImage = cgImage
         }
 
         // 2️⃣ OCR isteği
@@ -76,7 +110,7 @@ final class OCRScanViewModel: ObservableObject {
 
         // 7️⃣ Handler
         let handler = VNImageRequestHandler(
-            cgImage: cgImage,
+            cgImage: optimizedImage,
             orientation: .up,
             options: [:]
         )

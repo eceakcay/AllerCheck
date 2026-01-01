@@ -16,6 +16,8 @@ struct AllerCheckApp: App {
 
     // Global kullanıcı ayarları (alerjen seçimleri)
     @StateObject private var userSettings = UserSettings()
+    // Tema yöneticisi
+    @StateObject private var themeManager = ThemeManager()
 
     var body: some Scene {
         WindowGroup {
@@ -27,6 +29,9 @@ struct AllerCheckApp: App {
                 )
                 // User settings (profil)
                 .environmentObject(userSettings)
+                // Theme manager
+                .environmentObject(themeManager)
+                .preferredColorScheme(themeManager.currentTheme.colorScheme)
         }
     }
 }

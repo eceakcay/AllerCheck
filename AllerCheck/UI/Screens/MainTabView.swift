@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
+    
     var body: some View {
         TabView {
-            BarcodeScanView()
+            HomeView()
                 .tabItem {
-                    Label("Tara", systemImage: "barcode.viewfinder")
-                }
-            OCRScanView()
-                .tabItem {
-                    Label("Etiket", systemImage: "doc.text.viewfinder")
+                    Label("Ana Sayfa", systemImage: "house.fill")
                 }
             HistoryView()
                 .tabItem {
@@ -27,6 +25,8 @@ struct MainTabView: View {
                     Label("Profil", systemImage: "person.crop.circle")
                 }
         }
+        .tint(Color.appGreen)
+        .preferredColorScheme(themeManager.currentTheme.colorScheme)
     }
 }
 

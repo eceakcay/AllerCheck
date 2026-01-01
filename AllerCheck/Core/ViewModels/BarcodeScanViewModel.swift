@@ -66,14 +66,18 @@ final class BarcodeScanViewModel: NSObject, ObservableObject {
 
     // MARK: - Camera Control
     func startScanning() {
-        if !session.isRunning {
-            session.startRunning()
+        guard !session.isRunning else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.session.startRunning()
         }
     }
 
     func stopScanning() {
-        if session.isRunning {
-            session.stopRunning()
+        guard session.isRunning else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.session.stopRunning()
         }
     }
     
@@ -84,6 +88,13 @@ final class BarcodeScanViewModel: NSObject, ObservableObject {
         shouldNavigateToOCR = false
 
         startScanning()
+    }
+    
+    deinit {
+        // Kaynak temizliği
+        if session.isRunning {
+            session.stopRunning()
+        }
     }
 
 

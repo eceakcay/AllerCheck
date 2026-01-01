@@ -18,37 +18,25 @@ final class ResultViewModel: ObservableObject {
         product: ProductDTO,
         userAllergens: [Allergen]
     ) {
-
-        let ingredients =
-        product.ingredients_text ?? ""
-
-        riskLevel = analyzer.analyze(
-            ingredientsText: ingredients,
-            selectedAllergens: userAllergens
-        )
+        let ingredients = product.ingredients_text ?? ""
+        calculateRisk(ingredientsText: ingredients, userAllergens: userAllergens)
     }
     
     func calculateRiskFromOCR(
         ingredientsText: String,
         userAllergens: [Allergen]
     ) {
-        let lowercasedText = ingredientsText.lowercased()
-
-        var detectedNames: [String] = []
-
-        for allergen in userAllergens {
-            for keyword in allergen.keywords {
-                if lowercasedText.contains(keyword.lowercased()) {
-                    detectedNames.append(allergen.name)
-                    break
-                }
-            }
-        }
-
-        if detectedNames.isEmpty {
-            riskLevel = .safe
-        } else {
-            riskLevel = .danger
-        }
+        calculateRisk(ingredientsText: ingredientsText, userAllergens: userAllergens)
+    }
+    
+    // Tek birleşik fonksiyon - kod tekrarını önler
+    private func calculateRisk(
+        ingredientsText: String,
+        userAllergens: [Allergen]
+    ) {
+        riskLevel = analyzer.analyze(
+            ingredientsText: ingredientsText,
+            selectedAllergens: userAllergens
+        )
     }
 }
