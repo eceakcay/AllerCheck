@@ -110,12 +110,6 @@ Uygulama OpenFoodFacts API'sini kullanır. API endpoint'i `OpenFoodFactsService.
 let urlString = "https://world.openfoodfacts.org/api/v2/product/\(barcode)"
 ```
 
-### Cache Ayarları
-Cache süresi varsayılan olarak 1 saat olarak ayarlanmıştır. `OpenFoodFactsService.swift` dosyasında değiştirilebilir:
-
-```swift
-private let cacheExpirationTime: TimeInterval = 3600 // 1 saat
-```
 
 ## 📝 Lisans
 
@@ -123,7 +117,7 @@ Bu proje kişisel kullanım için geliştirilmiştir.
 
 ## 👤 Geliştirici
 
-Ece Akcay
+Ece Akçay
 
 ## 🙏 Teşekkürler
 
