@@ -119,11 +119,6 @@ Bu proje kişisel kullanım için geliştirilmiştir.
 
 Ece Akçay
 
-## 🙏 Teşekkürler
-
-- [OpenFoodFacts](https://world.openfoodfacts.org/) - Ürün veritabanı API'si
-- Apple - SwiftUI ve iOS framework'leri
-
 ---
 
 **Not**: Bu uygulama bilgilendirme amaçlıdır. Ciddi alerjik reaksiyonlar için mutlaka bir sağlık uzmanına danışın.
